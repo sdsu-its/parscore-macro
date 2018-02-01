@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang = "en">
+<title>ParScore Conversion</title>
+<head>
+    <title>ITS Converter</title>
+    <link rel="stylesheet" href="Parscore.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<div id ="header">
+    <a href="http://its.sdsu.edu">
+        <img src="http://its.sdsu.edu/wp-content/themes/SDSU-ITS-Child-Theme/images/logo.png">
+    </a>
+</div>
+<div id="drop_zone">Drop files here</div>
+<output id="list"></output>
+<p><a download="Parscore.txt" id="downloadlink" style="display:none;"><button id="download_button">Download Here!</button></a></p>
+
+<script type="text/javascript">
+    function handleFileSelect(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        var files = evt.dataTransfer.files; // FileList object.
+        var file = files[0];
+        if((file.type != "text/csv") && (file.type != "text/plain")){ // Todo Check for file type
+            alert("Please only drag and drop CSV files from Blackboard or TXT files from Parscore. Type: " + file.type);//todo solve accepting types
+            return;
+        }
+        document.getElementById('list').innerHTML = '<p>' + file.name + '<p>';
+        var reader = new FileReader();
+        reader.onload= function(){
+            var text = reader.result;
+            if(file.type == "text/csv") {
+                readFileCSV(text);
+            }
+            else if(file.type == "text/plain"){
+                readFileTXT(text);
+            }
+        };
+        reader.readAsText(file);
+    }
+    function readFileCSV(text) {
+        var write = "";
+        var allTextLines = text.split(/\r\n|\n/); //split by new line
+        for(var i = 1; i<allTextLines.length;i++){ //skip header line
+            var line = allTextLines[i].split(',');
+            write = write + line[2] + "," + line[0] + "," + line[1] + "\n";
+            write = write.replace(/['"]+/g, ''); //get rid of string quotes
+        }
+        var link = document.getElementById('downloadlink');
+        link.href = makeTextFile(write);
+        link.style.display = 'block';
+    }
+    function readFileTXT(text){
+        //todo parse back into csv (ensure it works after type acceptance)
+        var write = "";
+        var allTextLines = text.split(/\r\n|\n/); //split by new line
+        for(var i = 0; i<allTextLines.length;i++){ //skip header line
+            var line = allTextLines[i].split('  ');
+            write = write + line[0] + "," + line[1] + "\n";
+            write = write.replace(/['"]+/g, ''); //get rid of string quotes
+        }
+        var link = document.getElementById('downloadlink');
+        link.href = makeCSVFile(write);
+        link.style.display = 'block';
+    }
+    function makeTextFile(text) {
+        var data = new Blob([text], {type: 'text/plain'});
+        var textFile = window.URL.createObjectURL(data);
+
+        //if previously used, we need to revoke the object URL to avoid mem leak
+        if (textFile !== null) {
+            window.URL.revokeObjectURL(textFile);
+        }
+        return textFile;
+    }
+    function makeCSVFile(text) {
+        var data = new Blob([text], {type: 'text/csv'});
+        var csvFile = window.URL.createObjectURL(data);
+
+        //if previously used, we need to revoke the object URL to avoid mem leak
+        if (csvFile !== null) {
+            window.URL.revokeObjectURL(csvFile);
+        }
+        return csvFile;
+    }
+    function handleDragOver(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+    }
+    // Setup the drop zone event listeners.
+    var dropZone = document.getElementById('drop_zone');
+    dropZone.addEventListener('dragover', handleDragOver, false);
+    dropZone.addEventListener('drop', handleFileSelect, false);
+</script>
+</body>
+
+</html>
