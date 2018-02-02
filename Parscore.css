@@ -24,7 +24,7 @@ body{
 #download_button{
     width: 20vw;
     height:15vh;
-    color: white;
+    color: black;
     background-color: red;
     border-radius:30px;
     font-size: 1.5em;
