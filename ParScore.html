@@ -14,7 +14,6 @@
 </div>
 <div id="drop_zone">Drop files here</div>
 <output id="list"></output>
-<p><a download="Parscore.txt" id="downloadlink" style="display:none;"><button id="download_button">Download Here!</button></a></p>
 
 <script type="text/javascript">
     function handleFileSelect(evt) {
@@ -22,7 +21,7 @@
         evt.preventDefault();
         var files = evt.dataTransfer.files; // FileList object.
         var file = files[0];
-        if((file.type != "text/csv") && (file.type != "text/plain")){ // Todo Check for file type
+        if((file.type != "text/csv") && (file.type != "text/plain")){
             alert("Please only drag and drop CSV files from Blackboard or TXT files from Parscore.");
             return;
         }
@@ -47,51 +46,41 @@
             write = write + line[2] + "," + line[0] + "," + line[1] + "\n";
             write = write.replace(/['"]+/g, ''); //get rid of string quotes
         }
-        var link = document.getElementById('downloadlink');
-        link.href = makeTextFile(write);
-        link.style.display = 'block';
+        makeTextFile(write);
     }
     function readFileTXT(text, fileName){
-        //todo parse back into csv (ensure it works after type acceptance)
-        var write = [[]];
-        write[0] = ["Username", fileName];
-        var allTextLines = text.split(/\r\n|\n/); //split by new line
-        for(var i = 0; i<allTextLines.length;i++){
-            var line = allTextLines[i].split('  ');
-            line[0] = write.replace(/['"]+/g, '');//get rid of string quotes
-            line[1] = write.replace(/['"]+/g, ''); //get rid of string quotes
-            write[i+1]= [line[0],line[1]];
+        var rows = [["Username",fileName]];
+        var allNewlines = text.split(/\r\n|\n/); //split by new line
+        for(var i = 1; i<allNewlines.length-1;i++){ //skip header line
+            var write = allNewlines[i].split('\t');
+            write[0] = write[0].replace(/['"]+/g, ''); //get rid of string quotes
+            write[1] = write[1].replace(/['"]+/g, ''); //get rid of string quotes
+            var line = [write[0], write[1]];
+            rows.push(line);
         }
         var csvContent = "data:text/csv;charset=utf-8,";
         rows.forEach(function(rowArray) {
             var row = rowArray.join(",");
             csvContent += row + "\r\n";
-        }
+        });
         var encodedUri = encodeURI(csvContent);
-        window.open(encodedUri)
-       // var link = document.getElementById('downloadlink');
-        //makeCSVFile(write);
-       // link.style.display = 'block';
+        makeCSVFile(encodedUri);
     }
     function makeTextFile(text) {
         var data = new Blob([text], {type: 'text/plain'});
         var textFile = window.URL.createObjectURL(data);
-
-        //if previously used, we need to revoke the object URL to avoid mem leak
-        //if (textFile !== null) {
-        //    window.URL.revokeObjectURL(textFile);
-        //}
-        //return textFile;
+        var link = document.createElement("a");
+        link.setAttribute("href", textFile);
+        link.setAttribute("download", "ToParscore.txt");
+        document.body.appendChild(link);
+        link.click();
     }
-    function makeCSVFile(text) {
-        var data = new Blob([text], {type: 'text/csv'});
-        var csvFile = window.URL.createObjectURL(data);
-
-        //if previously used, we need to revoke the object URL to avoid mem leak
-        //if (csvFile !== null) {
-        //    window.URL.revokeObjectURL(csvFile);
-        //}
-        //return csvFile;
+    function makeCSVFile(encodedUri) {
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "ToBlackboard.csv");
+        document.body.appendChild(link);
+        link.click();
     }
     function handleDragOver(evt) {
         evt.stopPropagation();
