@@ -21,33 +21,6 @@ body{
     text-align: center;
 }
 
-#download_button{
-    width: 20vw;
-    height:15vh;
-    color: black;
-    background-color: red;
-    font-size: 1.5em;
-    padding-top: 10px;
-    display: block;
-    margin: auto;
-}
-#dropzonedragover{
-    display:block;
-    margin:auto;
-    width: 50vw;
-    height: 50vh;
-    font-size: 32pt;
-    border:2px dashed #000000;
-    color: #000000;
-    line-height:300px;
-    text-align: center;
-}
-
 a:link {
     text-decoration: none;
 }
-
-/*.drop_zone.dragover {*/
-/*border-color: #000000;*/
-/*color: #000000;*/
-/*}*/
