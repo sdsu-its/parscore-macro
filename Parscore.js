@@ -1,4 +1,6 @@
-function handleFileSelect(evt) {
+/* Handles dropzone input. Checks file type and sends to respective function depending on input.
+Checks for non csv or plain text files.*/
+function handleFileSelect(evt) { 
     evt.stopPropagation();
     evt.preventDefault();
     var files = evt.dataTransfer.files; // FileList object.
@@ -21,6 +23,7 @@ function handleFileSelect(evt) {
     };
     reader.readAsText(file);
 }
+/* Reads in CSV file from Blackboard and parses through to write to text file. */
 function readFileCSV(text) {
     var write = "";
     var allTextLines = text.split(/\r\n|\n/); //split by new line
@@ -31,6 +34,7 @@ function readFileCSV(text) {
     }
     makeTextFile(write);
 }
+/* Reads in Text file from Parscore and populates an array with the content of the text for CSV format.*/
 function readFileTXT(text, fileName){
     var rows = [["Username",fileName]];
     var allNewlines = text.split(/\r\n|\n/); //split by new line
@@ -49,6 +53,7 @@ function readFileTXT(text, fileName){
     var encodedUri = encodeURI(csvContent);
     makeCSVFile(encodedUri);
 }
+/* Creates a text file through a Blob JS object and attaches it to downloads element in CSS.*/
 function makeTextFile(text) {
     var data = new Blob([text], {type: 'text/plain'});
     var textFile = window.URL.createObjectURL(data);
@@ -58,6 +63,7 @@ function makeTextFile(text) {
     document.body.appendChild(link);
     link.click();
 }
+/* Creates a CSV file and links it with CSS download element. Sets to download in browser.*/
 function makeCSVFile(encodedUri) {
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -65,11 +71,12 @@ function makeCSVFile(encodedUri) {
     document.body.appendChild(link);
     link.click();
 }
+/* Prevents default drag behavior for file drop.*/
 function handleDragOver(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 }
-// Setup the drop zone event listeners.
+/* Setup the drop zone event listeners.*/
 var dropZone = document.getElementById('drop_zone');
 dropZone.addEventListener('dragover', handleDragOver, false);
 dropZone.addEventListener('drop', handleFileSelect, false);
