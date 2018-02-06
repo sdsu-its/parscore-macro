@@ -21,15 +21,15 @@
         evt.preventDefault();
         var files = evt.dataTransfer.files; // FileList object.
         var file = files[0];
-        if((file.type != "text/csv") && (file.type != "text/plain")){
-            alert("Please only drag and drop CSV files from Blackboard or TXT files from Parscore.");
+        if((file.type != "text/csv") && (file.type != "text/plain") && (file.type != "application/vnd.ms-excel")){
+            alert("Please only drag and drop CSV files from Blackboard or TXT files from Parscore." + file.type);
             return;
         }
         document.getElementById('list').innerHTML = '<p>' + file.name + '<p>';
         var reader = new FileReader();
         reader.onload= function(){
             var text = reader.result;
-            if(file.type == "text/csv") {
+            if(file.type == "text/csv" || file.type == "application/vnd.ms-excel") {
                 readFileCSV(text);
             }
             else if(file.type == "text/plain"){
