@@ -1,10 +1,12 @@
 body{
     font-family: "Arial", sans-serif;
 }
+
 #header{
     text-align: center;
     padding-bottom: 50px;
 }
+
 #drop_zone{
     display:block;
     margin:auto;
@@ -31,6 +33,7 @@ body{
     display: block;
     margin: auto;
 }
+
 #dropzonedragover{
     display:block;
     margin:auto;
@@ -46,8 +49,3 @@ body{
 a:link {
     text-decoration: none;
 }
-
-/*.drop_zone.dragover {*/
-/*border-color: #000000;*/
-/*color: #000000;*/
-/*}*/

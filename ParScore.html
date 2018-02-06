@@ -21,6 +21,7 @@
         evt.preventDefault();
         var files = evt.dataTransfer.files; // FileList object.
         var file = files[0];
+        //checks to see if they dropped a valid filetype
         if((file.type != "text/csv") && (file.type != "text/plain") && (file.type != "application/vnd.ms-excel")){
             alert("Please only drag and drop CSV files from Blackboard or TXT files from Parscore." + file.type);
             return;
