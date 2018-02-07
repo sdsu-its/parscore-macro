@@ -36,6 +36,7 @@ function readFileCSV(text) {
     var uname = fname = lname = 0;
     var allTextLines = text.split(/\r\n|\n/); //split by new line
     var line = allTextLines[0].split(',');
+    //set correct positions for username, first name, and last name
     for(var i = 0; i < allTextLines[0].length; i++){
         if(line[i] == "\"Username\"") uname = i;
         else if(line[i] == "\"First Name\"") fname = i;
