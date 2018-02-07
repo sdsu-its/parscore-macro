@@ -7,10 +7,16 @@ function handleFileSelect(evt) {
     var file = files[0];
     //checks to see if they dropped a valid filetype
     if((file.type != "text/csv") && (file.type != "text/plain") && (file.type != "application/vnd.ms-excel")){
-        alert("Please only drag and drop CSV files from Blackboard or TXT files from Parscore." + file.type);
-        return;
+        swal({
+            title: "Incorrect File type",
+            text: "Please only drag and drop CSV files from Blackboard or TXT files from ParScore.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          return;
     }
-    document.getElementById('list').innerHTML = '<p>' + file.name + '<p>';
+    $('#list').html('<p>' + file.name + '<p>');
     var reader = new FileReader();
     reader.onload= function(){
         var text = reader.result;
@@ -77,6 +83,6 @@ function handleDragOver(evt) {
     evt.preventDefault();
 }
 /* Setup the drop zone event listeners.*/
-var dropZone = document.getElementById('drop_zone');
+var dropZone = $('#drop_zone')[0];
 dropZone.addEventListener('dragover', handleDragOver, false);
 dropZone.addEventListener('drop', handleFileSelect, false);
