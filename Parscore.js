@@ -29,13 +29,21 @@ function handleFileSelect(evt) {
     };
     reader.readAsText(file);
 }
-/* Reads in CSV file from Blackboard and parses through to write to text file. */
+/* Reads in CSV file from Blackboard and parses through to write to text file.
+ * Handles changes to the default grade center scheme. */
 function readFileCSV(text) {
     var write = "";
+    var uname = fname = lname = 0;
     var allTextLines = text.split(/\r\n|\n/); //split by new line
+    var line = allTextLines[0].split(',');
+    for(var i = 0; i < allTextLines[0].length; i++){
+        if(line[i] == "\"Username\"") uname = i;
+        else if(line[i] == "\"First Name\"") fname = i;
+        else if(line[i] == "\"Last Name\"") lname = i;
+    }
     for(var i = 1; i<allTextLines.length;i++){ //skip header line
-        var line = allTextLines[i].split(',');
-        write = write + line[2] + "," + line[0] + "," + line[1] + "\n";
+        line = allTextLines[i].split(',');
+        write = write + line[uname] + "," + line[lname] + "," + line[fname] + "\n";
         write = write.replace(/['"]+/g, ''); //get rid of string quotes
     }
     makeTextFile(write);
