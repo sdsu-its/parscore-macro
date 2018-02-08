@@ -6,14 +6,13 @@ function handleFileSelect(evt) {
     var files = evt.dataTransfer.files; // FileList object.
     var file = files[0];
     //checks to see if they dropped a valid filetype
-    console.log(file.name);
     if((file.type != "text/csv") && (file.type != "text/plain") && (file.type != "application/vnd.ms-excel")){
         swal({
             title: "Incorrect File type",
             text: "Please only drag and drop CSV files from Blackboard or TXT files from ParScore.",
             icon: "warning",
             buttons: true,
-            dangerMode: true,
+            dangerMode: true
           })
           return;
     }
@@ -32,7 +31,7 @@ function handleFileSelect(evt) {
 }
 /* Reads in CSV file from Blackboard and parses through to write to text file.
  * Handles changes to the default grade center scheme. */
-function readFileCSV(text) {
+function readFileCSV(text, fileName) {
     var write = "";
     var uname = fname = lname = 0;
     var allTextLines = text.split(/\r\n|\n/); //split by new line
@@ -51,7 +50,7 @@ function readFileCSV(text) {
         else write = write + line[uname] + "," + line[lname] + "," + line[fname];
         write = write.replace(/['"]+/g, ''); //get rid of string quotes
     }
-    makeTextFile(write);
+    makeTextFile(write, fileName);
 }
 /* Reads in Text file from Parscore and populates an array with the content of the text for CSV format.*/
 function readFileTXT(text, fileName){
@@ -79,6 +78,7 @@ function makeTextFile(text, fileName) {
     var textFile = window.URL.createObjectURL(data);
     var link = document.createElement("a");
     link.setAttribute("href", textFile);
+    console.log(fileName)
     link.setAttribute("download", fileName + ".txt");
     document.body.appendChild(link);
     link.click();
@@ -94,7 +94,7 @@ function makeCSVFile(encodedUri, fileName) {
 }
 /* Removes the filename extension for filenames passed in*/
 function removeExtention(fileName){
-    return fileName.substr(0,(fileName.length()-4));
+    return fileName.substr(0,(fileName.length-4));
 }
 /* Prevents default drag behavior for file drop.*/
 function handleDragOver(evt) {
