@@ -42,12 +42,9 @@ function readFileCSV(text, fileName) {
         else if(line[i] == "\"First Name\"") fname = i;
         else if(line[i] == "\"Last Name\"") lname = i;
     }
-    for(var i = 1; i<allTextLines.length;i++){ //skip header line
+    for(var i = 1; i<allTextLines.length-1;i++){ //skip header line
         line = allTextLines[i].split(',');
-        if (i != allTextLines.length-1) {
-            write = write + line[uname] + "," + line[lname] + "," + line[fname] + "\n";
-        }
-        else write = write + line[uname] + "," + line[lname] + "," + line[fname];
+        write = write + line[uname] + "," + line[lname] + "," + line[fname] + "\n";
         write = write.replace(/['"]+/g, ''); //get rid of string quotes
     }
     makeTextFile(write, fileName);
