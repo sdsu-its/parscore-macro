@@ -6,6 +6,7 @@ function handleFileSelect(evt) {
     var files = evt.dataTransfer.files; // FileList object.
     var file = files[0];
     //checks to see if they dropped a valid filetype
+    console.log(file.name);
     if((file.type != "text/csv") && (file.type != "text/plain") && (file.type != "application/vnd.ms-excel")){
         swal({
             title: "Incorrect File type",
@@ -21,7 +22,7 @@ function handleFileSelect(evt) {
     reader.onload= function(){
         var text = reader.result;
         if(file.type == "text/csv" || file.type == "application/vnd.ms-excel") {
-            readFileCSV(text);
+            readFileCSV(text, file.name);
         }
         else if(file.type == "text/plain"){
             readFileTXT(text,file.name);
@@ -44,7 +45,10 @@ function readFileCSV(text) {
     }
     for(var i = 1; i<allTextLines.length;i++){ //skip header line
         line = allTextLines[i].split(',');
-        write = write + line[uname] + "," + line[lname] + "," + line[fname] + "\n";
+        if (i != allTextLines.length-1) {
+            write = write + line[uname] + "," + line[lname] + "," + line[fname] + "\n";
+        }
+        else write = write + line[uname] + "," + line[lname] + "," + line[fname];
         write = write.replace(/['"]+/g, ''); //get rid of string quotes
     }
     makeTextFile(write);
@@ -66,25 +70,31 @@ function readFileTXT(text, fileName){
         csvContent += row + "\r\n";
     });
     var encodedUri = encodeURI(csvContent);
-    makeCSVFile(encodedUri);
+    makeCSVFile(encodedUri, fileName);
 }
 /* Creates a text file through a Blob JS object and attaches it to downloads element in CSS.*/
-function makeTextFile(text) {
+function makeTextFile(text, fileName) {
+    fileName = removeExtention(fileName);
     var data = new Blob([text], {type: 'text/plain'});
     var textFile = window.URL.createObjectURL(data);
     var link = document.createElement("a");
     link.setAttribute("href", textFile);
-    link.setAttribute("download", "ToParscore.txt");
+    link.setAttribute("download", fileName + ".txt");
     document.body.appendChild(link);
     link.click();
 }
 /* Creates a CSV file and links it with CSS download element. Sets to download in browser.*/
-function makeCSVFile(encodedUri) {
+function makeCSVFile(encodedUri, fileName) {
+    fileName = removeExtention(filename);
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "ToBlackboard.csv");
+    link.setAttribute("download", fileName+".csv");
     document.body.appendChild(link);
     link.click();
+}
+/* Removes the filename extension for filenames passed in*/
+function removeExtention(fileName){
+    return fileName.substr(0,(fileName.length()-4));
 }
 /* Prevents default drag behavior for file drop.*/
 function handleDragOver(evt) {
