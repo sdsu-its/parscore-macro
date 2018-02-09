@@ -24,6 +24,7 @@ function handleFileSelect(evt) {
             readFileCSV(text, file.name);
         }
         else if(file.type == "text/plain"){
+			console.log("HERE");
             readFileTXT(text,file.name);
         }
     };
@@ -53,7 +54,7 @@ function readFileCSV(text, fileName) {
 function readFileTXT(text, fileName){
     var rows = [["Username",fileName]];
     var allNewlines = text.split(/\r\n|\n/); //split by new line
-    for(var i = 1; i<allNewlines.length-1;i++){ //skip header line
+    for(var i = 0; i<allNewlines.length-1;i++){ //skip header line
         var write = allNewlines[i].split('\t');
         write[0] = write[0].replace(/['"]+/g, ''); //get rid of string quotes
         write[1] = write[1].replace(/['"]+/g, ''); //get rid of string quotes
@@ -66,6 +67,7 @@ function readFileTXT(text, fileName){
         csvContent += row + "\r\n";
     });
     var encodedUri = encodeURI(csvContent);
+console.log("HERE");
     makeCSVFile(encodedUri, fileName);
 }
 /* Creates a text file through a Blob JS object and attaches it to downloads element in CSS.*/
@@ -82,11 +84,12 @@ function makeTextFile(text, fileName) {
 }
 /* Creates a CSV file and links it with CSS download element. Sets to download in browser.*/
 function makeCSVFile(encodedUri, fileName) {
-    fileName = removeExtention(filename);
+    fileName = removeExtention(fileName);
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", fileName+".csv");
     document.body.appendChild(link);
+	console.log("HERE");
     link.click();
 }
 /* Removes the filename extension for filenames passed in*/
