@@ -1,6 +1,7 @@
 /* Handles dropzone input. Checks file type and sends to respective function depending on input.
 Checks for non csv or plain text files.*/
 function handleFileSelect(evt) {
+    $('#drop_zone').removeClass("active");
     evt.stopPropagation();
     evt.preventDefault();
     var files = evt.dataTransfer.files; // FileList object.
@@ -16,7 +17,14 @@ function handleFileSelect(evt) {
         });
         return;
     }
-    $('#list').html('<p>' + file.name + '<p>');
+
+    $('#recents').show();
+    var $recent_list = $('#recent-files');
+    while ($recent_list.find('li').length >= 5) {
+        $recent_list.find('li').first().remove();
+    }
+    $recent_list.append('<li>' + file.name + '</li>');
+
     var reader = new FileReader();
     reader.onload = function () {
         var text = reader.result;
@@ -108,5 +116,12 @@ function handleDragOver(evt) {
 
 /* Setup the drop zone event listeners.*/
 var dropZone = $('#drop_zone')[0];
+dropZone.addEventListener('dragleave', function () {
+    $('#drop_zone').removeClass("active");
+}, false);
+dropZone.addEventListener('dragenter', function () {
+    $('#drop_zone').addClass("active");
+}, false);
+
 dropZone.addEventListener('dragover', handleDragOver, false);
 dropZone.addEventListener('drop', handleFileSelect, false);

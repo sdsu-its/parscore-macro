@@ -2,19 +2,77 @@
 <html lang="en">
 <title>ParScore Conversion</title>
 <head>
-    <title>ITS Converter</title>
-    <link rel="stylesheet" href="Parscore.css">
+    <title>ITS ParScore Converter</title>
+    <link rel="icon" href="bug.png">
+
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+          crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <link rel="stylesheet"
+          href="style.css">
 </head>
 <body>
-<div id="header">
-    <a href="http://its.sdsu.edu">
-        <img src="logo.png">
-    </a>
-</div>
-<div id="drop_zone">Drop files here</div>
-<output id="list"></output>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script type="text/javascript" src="Parscore.js"></script>
+
+<main role="main" class="container">
+    <div id="header">
+        <a href="http://its.sdsu.edu" class="no-decoration">
+            <img id="logo" src="logo.png">
+        </a>
+    </div>
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i>&nbsp;Heads Up!</h4>
+        <p>We are still actively developing this tool, and therefore you might encounter some errors along the way.
+            We have done our best to avoid this, but we too are humans.</p>
+        <hr>
+        <p class="mb-0">Please make sure the number of students in your ParScore roster matches the number of students
+            in your Blackboard course, and the number of NULL scores being uploaded to Blackboard corresponds to number
+            of blanks in your ParScore Roster.</p>
+    </div>
+    <!-- TODO Add Feedback Requested Alert Message (style: success)-->
+
+    <div style="display: block">
+        <div id="drop_zone">
+            <!-- Content set by CSS -->
+        </div>
+    </div>
+    <div id="recents" style="display: none">
+        <h5 class="mt-3">Recently Converted Files</h5>
+        <ul id="recent-files"
+            class="text-muted small">
+            <!-- Will be filled by handleFileSelect() -->
+        </ul>
+    </div>
+
+</main>
+<footer class="footer">
+    <div class="container">
+        <span>ParScore Conversion Tool - Version <span id="converter-version" class="version">1.0.0-Alpha</span></span>
+        <span class="right"><a href="https://its.sdsu.edu/support/" target="_blank">Report an issue!</a></span>
+        <!-- TODO Create Issue/Feedback Form and Update Link Above-->
+        <span class="right">
+            <a href="https://github.com/sdsu-its/parscore-macro" target="_blank" class="no-decoration icon" id="github"><i
+                    class="fab fa-github"></i></a>
+        </span>
+    </div>
+</footer>
+
+<!-- JS Frameworks -->
+<script type="text/javascript"
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript"
+        src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+        integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+        crossorigin="anonymous"></script>
+<script type="text/javascript"
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+        integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+        crossorigin="anonymous"></script>
+<!-- JS Scripts -->
+<script type="text/javascript"
+        src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,119 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 40px; /* Margin bottom by footer height */
+}
+
+/* General Page Styles */
+
+#header {
+    text-align: center;
+    padding-bottom: 2rem;
+}
+
+#logo {
+    height: 5.75rem;
+    margin: 2em 0 0;
+}
+
+a.no-decoration {
+    text-decoration: none;
+    border-bottom: none;
+}
+
+/* File Drag & Drop */
+#drop_zone {
+    margin: auto;
+    height: 50vh;
+    border: 2px dashed #cccccc;
+    color: #c0c0c0;
+    text-align: center;
+    font-size: 32pt;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: background-color 0.5s ease, color 0.5s ease, content 0.5s ease;
+    -webkit-transition: background-color 0.5s ease, color 0.5s ease, content 0.5s ease;
+    -moz-transition: background-color 0.5s ease, color 0.5s ease, content 0.5s ease;
+    -o-transition: background-color 0.5s ease, color 0.5s ease, content 0.5s ease;
+}
+
+#drop_zone:after {
+    content: 'Drag & Drop Files Here';
+}
+
+#drop_zone.active {
+    background-color: #8C8C8C;
+    color: #b4b4b4;
+}
+
+#drop_zone.active:after {
+    content: 'Drop Files Here';
+}
+
+/* Footer Styles*/
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px; /* Set the fixed height of the footer here */
+    line-height: 35px; /* Vertically center the text there */
+    font-size: .75rem;
+}
+
+.footer .container {
+    border-top: solid #E0E0E0 1px;
+    color: #666666;
+    cursor: default;
+}
+
+.footer .container a, .footer.container a:hover {
+    text-decoration: none;
+    color: inherit;
+    cursor: default;
+}
+
+footer.footer a:not(.icon):hover,
+footer.footer a:visited:not(.icon):hover {
+    border-bottom-color: #1166BB;
+}
+
+footer.footer a:not(.icon),
+footer.footer a:visited:not(.icon) {
+    border-bottom: 1px solid #d3d6db;
+}
+
+footer.footer a:hover,
+footer.footer a:visited:hover {
+    color: #222324;
+}
+
+footer.footer a,
+footer.footer a:visited {
+    color: #69707a;
+}
+
+footer.footer span.version {
+    font-style: italic;
+}
+
+footer.footer .right {
+    float: right
+}
+
+footer.footer span:not(:first-child) {
+    margin: 0 .25em 0 0;
+}
+
+footer.footer span:not(:last-child) {
+    margin: 0 0 0 .25em;
+}
+
+footer.footer #github:hover {
+    color: #000;
+}
