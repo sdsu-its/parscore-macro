@@ -53,8 +53,19 @@ function readFileCSV(text, fileName) {
         else if (line[i] === "\"First Name\"") first_name = i;
         else if (line[i] === "\"Last Name\"") last_name = i;
     }
+    if(user_name === first_name || user_name === last_name || first_name === last_name) {
+        swal({
+            title: "Incorrectly Formatted File",
+            text: "Please only drag and drop CSV files given to you from the Blackboard Grade Center. We were not able to detect all of the columns necessary to convert your file.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        });
+        return;
+    }
     for (var j = 1; j < allTextLines.length - 1; j++) { //skip header line
         line = allTextLines[j].split(',');
+        if (line[user_name].substr(0,8) === "clicker") continue;
         write = write + line[user_name] + "," + line[last_name] + "," + line[first_name] + "\n";
         write = write.replace(/['"]+/g, ''); //get rid of string quotes
     }
@@ -65,8 +76,21 @@ function readFileCSV(text, fileName) {
 function readFileTXT(text, fileName) {
     var rows = [["Username", fileName]];
     var allNewlines = text.split(/\r\n|\n/); //split by new line
-    for (var i = 0; i < allNewlines.length - 1; i++) { //skip header line
-        var write = allNewlines[i].split('\t');
+    var write = allNewlines[0].split('\t');
+    write[0] = write[0].replace(/['"]+/g, ''); //get rid of string quotes
+    if (write[0].length !== 9 || write[0].substr(0,1) !== "8" ) {
+        swal({
+            title: "Incorrectly Formatted File",
+            text: "Please only drag and drop TXT files given to you from ParScore. We did not detect the proper formatting  necessary to convert your file.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        });
+        return;
+    }
+
+    for (var i = 0; i < allNewlines.length - 1; i++) {
+        write = allNewlines[i].split('\t');
         write[0] = write[0].replace(/['"]+/g, ''); //get rid of string quotes
         write[1] = write[1].replace(/['"]+/g, ''); //get rid of string quotes
         var line = [write[0], write[1]];
