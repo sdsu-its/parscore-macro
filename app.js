@@ -65,7 +65,7 @@ function readFileCSV(text, fileName) {
     }
     for (var j = 1; j < allTextLines.length - 1; j++) { //skip header line
         line = allTextLines[j].split(',');
-        if (line[user_name].substr(0,8) === "clicker") continue;
+        if (line[user_name].substr(0,8) === "clicker") continue;//skips clicker users
         write = write + line[user_name] + "," + line[last_name] + "," + line[first_name] + "\n";
         write = write.replace(/['"]+/g, ''); //get rid of string quotes
     }
