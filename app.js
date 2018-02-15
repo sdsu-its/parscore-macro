@@ -53,6 +53,7 @@ function readFileCSV(text, fileName) {
         else if (line[i] === "\"First Name\"") first_name = i;
         else if (line[i] === "\"Last Name\"") last_name = i;
     }
+    //if any of the column positions did not get set, we assume the file is not formatted correctly
     if (user_name === first_name || user_name === last_name || first_name === last_name) {
         swal({
             title: "Incorrectly Formatted File",
@@ -65,9 +66,7 @@ function readFileCSV(text, fileName) {
     }
     for (var j = 1; j < allTextLines.length - 1; j++) { //skip header line
         line = allTextLines[j].split(',');
-        if (!(isValidUser(line[user_name]))) {
-            console.log("gg");
-            continue; //skip over invalid users
+        if (!(isValidUser(line[user_name]))) continue; //skip over invalid users
             write = write + line[user_name] + "," + line[last_name] + "," + line[first_name] + "\n";
             write = write.replace(/['"]+/g, ''); //get rid of string quotes
         }
@@ -164,4 +163,3 @@ function readFileCSV(text, fileName) {
 
     dropZone.addEventListener('dragover', handleDragOver, false);
     dropZone.addEventListener('drop', handleFileSelect, false);
-}
