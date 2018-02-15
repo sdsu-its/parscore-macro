@@ -65,12 +65,24 @@ function readFileCSV(text, fileName) {
     }
     for (var j = 1; j < allTextLines.length - 1; j++) { //skip header line
         line = allTextLines[j].split(',');
-        if (line[user_name].substr(0,8) === "\"clicker") continue; //skip over clicker users
-        if (line[user_name].substr(line[user_name]-12,line[user_name].length-1) === "previewuser") continue; //skip over preview users
+        if (!(isValidUser(line[user_name]))){
+          console.log("gg");
+          continue; //skip over invalid users
         write = write + line[user_name] + "," + line[last_name] + "," + line[first_name] + "\n";
         write = write.replace(/['"]+/g, ''); //get rid of string quotes
     }
     makeTextFile(write, fileName);
+}
+
+/* Checks to see if a username is a valid blackboard and parscore readable string.*/
+function isValidUser(userName) {
+    userName = userName.replace(/['"]+/g, ''); //get rid of string quotes
+    isValid = true;
+    if (userName.length != 9) isValid = false;
+    for (int i = 0; i < userName.length; i++)
+        if (userName.charAt(i) > 9 || userName.charAt(i) < 0)
+            isValid = false;
+    return isValid;
 }
 
 /* Reads in Text file from ParScore and populates an array with the content of the text for CSV format.*/
@@ -79,10 +91,10 @@ function readFileTXT(text, fileName) {
     var allNewlines = text.split(/\r\n|\n/); //split by new line
     var write = allNewlines[0].split('\t');
     write[0] = write[0].replace(/['"]+/g, ''); //get rid of string quotes
-    if (write[0].length !== 9 || write[0].substr(0,1) !== "8" ) {
+    if (!(isValidUser(write[0]))) {
         swal({
             title: "Incorrectly Formatted File",
-            text: "Please only drag and drop TXT files given to you from ParScore. We did not detect the proper formatting  necessary to convert your file.",
+            text: "Please only drag and drop TXT files given to you from ParScore. We did not detect the proper formatting necessary to convert your file.",
             icon: "warning",
             buttons: true,
             dangerMode: true
