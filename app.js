@@ -80,7 +80,7 @@ function readFileCSV(text, fileName) {
         if (userName.length !== 9) isValid = false;
         for (i = 0;i < userName.length;i++)
         {
-            if (userName.charAt(i) > 9 || userName.charAt(i) < 0)
+            if (userName.charAt(i) > '9' || userName.charAt(i) < '0')
                 isValid = false;
         }
         return isValid;
