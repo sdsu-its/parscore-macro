@@ -77,12 +77,8 @@ function readFileCSV(text, fileName) {
     function isValidUser(userName) {
         userName = userName.replace(/['"]+/g, ''); //get rid of string quotes
         isValid = true;
-        if (userName.length !== 9) isValid = false;
-        for (i = 0;i < userName.length;i++)
-        {
-            if (userName.charAt(i) > '9' || userName.charAt(i) < '0')
-                isValid = false;
-        }
+        num = parseInt(userName);
+        if (num < 800000000) isValid = false;
         return isValid;
     }
 
