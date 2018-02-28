@@ -78,7 +78,7 @@ function readFileCSV(text, fileName) {
         userName = userName.replace(/['"]+/g, ''); //get rid of string quotes
         isValid = true;
         num = parseInt(userName);
-        if (num < 800000000) isValid = false;
+        if (isNaN(num)) isValid = false;
         return isValid;
     }
 
