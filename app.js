@@ -87,6 +87,10 @@ function readFileCSV(text, fileName) {
         var rows = [["Username", fileName]];
         var allNewlines = text.split(/\r\n|\n/); //split by new line
         var write = allNewlines[0].split('\t');
+        if (write[0].includes("student")){
+            allNewlines.shift();
+            var write = allNewlines[0].split('\t');
+        }
         write[0] = write[0].replace(/['"]+/g, ''); //get rid of string quotes
         if (!(isValidUser(write[0]))) {
             swal({
