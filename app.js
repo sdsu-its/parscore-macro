@@ -67,7 +67,7 @@ function readFileCSV(text, fileName) {
     for (var j = 1; j < allTextLines.length - 1; j++) { //skip header line
         line = allTextLines[j].split(',');
         if (!(isValidUser(line[user_name]))) continue; //skip over invalid users
-            write = write + line[user_name] + "," + line[last_name] + "," + line[first_name] + "\n";
+            write = write + line[user_name] + "," + line[last_name] + "," + line[first_name] + "\r\n";
             write = write.replace(/['"]+/g, ''); //get rid of string quotes
         }
         makeTextFile(write, fileName);
@@ -87,6 +87,10 @@ function readFileCSV(text, fileName) {
         var rows = [["Username", fileName]];
         var allNewlines = text.split(/\r\n|\n/); //split by new line
         var write = allNewlines[0].split('\t');
+        if (write[0].includes("student")){
+            allNewlines.shift();
+            var write = allNewlines[0].split('\t');
+        }
         write[0] = write[0].replace(/['"]+/g, ''); //get rid of string quotes
         if (!(isValidUser(write[0]))) {
             swal({
