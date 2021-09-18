@@ -105,7 +105,6 @@ function readFileTXT(text, fileName) {
 
 /* Checks to see if a username is a valid and readable string.*/
 function isValidUser(userName) {
-    if (userName.includes("RED")) return true;  // TODO Remove this
     userName = userName.replace(/['"]+/g, '');  //get rid of string quotes
     isValid = true;
     num = parseInt(userName);
