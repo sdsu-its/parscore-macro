@@ -1,0 +1,21 @@
+{
+  "name": "parscore-macro",
+  "homepage": "https://github.com/sdsu-its/parscore-macro",
+  "authors": [
+    "Tom Paulus <tom@tompaulus.com>"
+  ],
+  "description": "Website to help ParScore users convert files between Canvas and ParScore",
+  "main": "app.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "papaparse": "^5.3.1"
+  }
+}

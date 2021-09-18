@@ -1,0 +1,22 @@
+{
+  "name": "parscore-macro",
+  "version": "1.0.0",
+  "description": "Website to help ParScore users convert files between Canvas and ParScore",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdsu-its/parscore-macro.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sdsu-its/parscore-macro/issues"
+  },
+  "homepage": "https://github.com/sdsu-its/parscore-macro#readme",
+  "dependencies": {
+    "bower": "^1.8.12"
+  }
+}

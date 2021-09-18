@@ -10,7 +10,7 @@ function handleFileSelect(evt) {
     if ((file.type !== "text/csv") && (file.type !== "text/plain") && (file.type !== "application/vnd.ms-excel")) {
         swal({
             title: "Incorrect File type",
-            text: "Please only drag and drop CSV files from Blackboard or TXT files from ParScore.",
+            text: "Please only drag and drop CSV files from Canvas or TXT files from ParScore.",
             icon: "warning",
             buttons: true,
             dangerMode: true
@@ -41,125 +41,119 @@ function handleFileSelect(evt) {
 /* Reads in CSV file from Blackboard and parses through to write to text file.
  * Handles changes to the default grade center scheme. */
 function readFileCSV(text, fileName) {
-    var write = "";
-    var user_name = 0,
-        first_name = 0,
-        last_name = 0;
-    var allTextLines = text.split(/\r\n|\n/); //split by new line
-    var line = allTextLines[0].split(',');
-    //set correct positions for username, first name, and last name
-    for (var i = 0; i < allTextLines[0].length; i++) {
-        if (line[i] === "\"Username\"") user_name = i;
-        else if (line[i] === "\"First Name\"") first_name = i;
-        else if (line[i] === "\"Last Name\"") last_name = i;
-    }
+    var parse = Papa.parse(text, {header: true, skipEmptyLines: 'greedy'});
+    var students = parse['data'];
+
     //if any of the column positions did not get set, we assume the file is not formatted correctly
-    if (user_name === first_name || user_name === last_name || first_name === last_name) {
+    if (!students[students.length - 1].hasOwnProperty("Student") || !students[students.length - 1].hasOwnProperty("SIS Login ID")) {
         swal({
             title: "Incorrectly Formatted File",
-            text: "Please only drag and drop CSV files given to you from the Blackboard Grade Center. We were not able to detect all of the columns necessary to convert your file.",
+            text: "Please only drag and drop CSV files given to you from Canvas. We were not able to detect all of the columns necessary to convert your file.",
             icon: "warning",
             buttons: true,
             dangerMode: true
         });
         return;
     }
-    for (var j = 1; j < allTextLines.length - 1; j++) { //skip header line
-        line = allTextLines[j].split(',');
-        if (!(isValidUser(line[user_name]))) continue; //skip over invalid users
-            write = write + line[user_name] + "," + line[last_name] + "," + line[first_name] + "\r\n";
-            write = write.replace(/['"]+/g, ''); //get rid of string quotes
-        }
-        makeTextFile(write, fileName);
+
+    var parscore_string = ""
+    for (let student of students) {
+        if (!(isValidUser(student['SIS User ID']))) continue; //skip over invalid users
+          name_split = student['Student'].split(", ");
+          parscore_string = parscore_string + student['SIS User ID'].trim() + "," + name_split[0] + "," + name_split[1] + "\n\r";
     }
 
-    /* Checks to see if a username is a valid blackboard and parscore readable string.*/
-    function isValidUser(userName) {
-        userName = userName.replace(/['"]+/g, ''); //get rid of string quotes
-        isValid = true;
-        num = parseInt(userName);
-        if (isNaN(num) || num < 800000000) isValid = false;//if the number is not a number or it is less than the lowest redID it's not valid
-        return isValid;
-    }
+    makeTextFile(parscore_string, fileName);
+}
 
-    /* Reads in Text file from ParScore and populates an array with the content of the text for CSV format.*/
-    function readFileTXT(text, fileName) {
-        var rows = [["Username", fileName]];
-        var allNewlines = text.split(/\r\n|\n/); //split by new line
-        var write = allNewlines[0].split('\t');
-        if (write[0].includes("student")){
-            allNewlines.shift();
-            var write = allNewlines[0].split('\t');
-        }
-        write[0] = write[0].replace(/['"]+/g, ''); //get rid of string quotes
-        if (!(isValidUser(write[0]))) {
-            swal({
-                title: "Incorrectly Formatted File",
-                text: "Please only drag and drop TXT files given to you from ParScore. We did not detect the proper formatting necessary to convert your file.",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true
-            });
-            return;
-        }
 
-        for (var i = 0; i < allNewlines.length - 1; i++) {
-            write = allNewlines[i].split('\t');
-            write[0] = write[0].replace(/['"]+/g, ''); //get rid of string quotes
-            write[1] = write[1].replace(/['"]+/g, ''); //get rid of string quotes
-            var line = [write[0], write[1]];
-            rows.push(line);
-        }
-        var csvContent = "data:text/csv;charset=utf-8,";
-        rows.forEach(function (rowArray) {
-            var row = rowArray.join(",");
-            csvContent += row + "\r\n";
+/* Reads in Text file from ParScore and populates an array with the content of the text for CSV format.*/
+function readFileTXT(text, fileName) {
+    var parse = Papa.parse(text, {header: true, skipEmptyLines: 'greedy'});
+    var records = parse['data'];
+
+    if (!(isValidUser(records[0]['student_number']))) {
+        swal({
+            title: "Incorrectly Formatted File",
+            text: "Please only drag and drop TXT files given to you from ParScore. We did not detect the proper formatting necessary to convert your file.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
         });
-        var encodedUri = encodeURI(csvContent);
-        makeCSVFile(encodedUri, fileName);
+        return;
     }
 
-    /* Creates a text file through a Blob JS object and attaches it to downloads element in CSS.*/
-    function makeTextFile(text, fileName) {
-        fileName = removeExtension(fileName);
-        var data = new Blob([text], {type: 'text/plain'});
-        var textFile = window.URL.createObjectURL(data);
-        var link = document.createElement("a");
-        link.setAttribute("href", textFile);
-        link.setAttribute("download", fileName + ".txt");
-        document.body.appendChild(link);
-        link.click();
+    var header = ["Student", "ID", "SIS User ID", "SIS Login ID", "Section"];
+    for(var key in records[1]) {
+      if(records[1].hasOwnProperty(key) && key !== 'student_number') {
+        header.push(key);
+      }
     }
 
-    /* Creates a CSV file and links it with CSS download element. Sets to download in browser.*/
-    function makeCSVFile(encodedUri, fileName) {
-        fileName = removeExtension(fileName);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", fileName + ".csv");
-        document.body.appendChild(link);
-        link.click();
+    for(let record of records){
+      record['SIS User ID'] = record['student_number'];
+      delete record['student_number'];
     }
 
-    /* Removes the filename extension for file names passed in*/
-    function removeExtension(fileName) {
-        return fileName.substr(0, (fileName.length - 4));
-    }
+    var result = Papa.unparse(records, {columns: header, skipEmptyLines: 'greedy'});
 
-    /* Prevents default drag behavior for file drop.*/
-    function handleDragOver(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-    }
+    var content_type_header = "data:text/csv;charset=utf-8,";
+    var encodedUri = encodeURI(content_type_header + result);
+    makeCSVFile(encodedUri, fileName);
+}
 
-    /* Setup the drop zone event listeners.*/
-    var dropZone = $('#drop_zone')[0];
-    dropZone.addEventListener('dragleave', function () {
-        $('#drop_zone').removeClass("active");
-    }, false);
-    dropZone.addEventListener('dragenter', function () {
-        $('#drop_zone').addClass("active");
-    }, false);
 
-    dropZone.addEventListener('dragover', handleDragOver, false);
-    dropZone.addEventListener('drop', handleFileSelect, false);
+/* Checks to see if a username is a valid and readable string.*/
+function isValidUser(userName) {
+    if (userName.includes("RED")) return true;  // TODO Remove this
+    userName = userName.replace(/['"]+/g, '');  //get rid of string quotes
+    isValid = true;
+    num = parseInt(userName);
+    if (isNaN(num) || num < 800000000) return false;  //if the number is not a number or it is less than the lowest redID it's not valid
+    return true;
+}
+
+/* Creates a text file through a Blob JS object and attaches it to downloads element in CSS.*/
+function makeTextFile(text, fileName) {
+    fileName = removeExtension(fileName);
+    var data = new Blob([text], {type: 'text/plain'});
+    var textFile = window.URL.createObjectURL(data);
+    var link = document.createElement("a");
+    link.setAttribute("href", textFile);
+    link.setAttribute("download", fileName + ".txt");
+    document.body.appendChild(link);
+    link.click();
+}
+
+/* Creates a CSV file and links it with CSS download element. Sets to download in browser.*/
+function makeCSVFile(encodedUri, fileName) {
+    fileName = removeExtension(fileName);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", fileName + ".csv");
+    document.body.appendChild(link);
+    link.click();
+}
+
+/* Removes the filename extension for file names passed in*/
+function removeExtension(fileName) {
+    return fileName.substr(0, (fileName.length - 4));
+}
+
+/* Prevents default drag behavior for file drop.*/
+function handleDragOver(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+}
+
+/* Setup the drop zone event listeners.*/
+var dropZone = $('#drop_zone')[0];
+dropZone.addEventListener('dragleave', function () {
+    $('#drop_zone').removeClass("active");
+}, false);
+dropZone.addEventListener('dragenter', function () {
+    $('#drop_zone').addClass("active");
+}, false);
+
+dropZone.addEventListener('dragover', handleDragOver, false);
+dropZone.addEventListener('drop', handleFileSelect, false);
