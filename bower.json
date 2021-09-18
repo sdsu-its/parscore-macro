@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "papaparse": "^5.3.1"
+    "papaparse": "^5.3.1",
+    "jquery": "^3.6.0"
   }
 }
