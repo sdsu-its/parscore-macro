@@ -26,7 +26,7 @@ jobs:
         cache: 'npm'
     - run: npm install -g bower
     - run: bower install
-    - run: pwd; ls
+    - run: rm .gitignore  # We want to include the bower/node_modules in the GH Pages Branch
     
     - name: Publish generated content to GitHub Pages
       uses: tsunematsu21/actions-publish-gh-pages@v1.0.2
