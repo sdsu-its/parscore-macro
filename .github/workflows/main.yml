@@ -28,10 +28,11 @@ jobs:
     - run: mkdir dist; cp *.html dist; cp *.css dist; cp *.js dist; cp *.png dist; cp bower.json dist
     - run: cd dist; bower install -p
     
-    - name: Publish generated content to GitHub Pages
-      uses: tsunematsu21/actions-publish-gh-pages@v1.0.2
+    - name: Deploy to GitHub Pages
+      uses: Cecilapp/GitHub-Pages-deploy@v3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        dir: dist
+        build_dir: dist
         branch: gh-pages
-        token: ${{ secrets.ACCESS_TOKEN }}
 
