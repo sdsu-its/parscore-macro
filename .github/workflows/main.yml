@@ -30,7 +30,7 @@ jobs:
     - name: Publish generated content to GitHub Pages
       uses: tsunematsu21/actions-publish-gh-pages@v1.0.2
       with:
-        dir: .
+        dir: /home/runner/work/parscore-macro/parscore-macro
         branch: gh-pages
         token: ${{ secrets.ACCESS_TOKEN }}
 
