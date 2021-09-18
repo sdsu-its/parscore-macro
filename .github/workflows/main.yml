@@ -25,13 +25,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm install -g bower
-    - run: bower install
-    - run: rm .gitignore  # We want to include the bower/node_modules in the GH Pages Branch
+    - run: mkdir dist; cp *.html dist; cp *.css dist; cp *.js dist; cp *.png dist; cp bower.json dist
+    - run: cd dist; bower install -p
     
     - name: Publish generated content to GitHub Pages
       uses: tsunematsu21/actions-publish-gh-pages@v1.0.2
       with:
-        dir: /home/runner/work/parscore-macro/parscore-macro
+        dir: dist
         branch: gh-pages
         token: ${{ secrets.ACCESS_TOKEN }}
 
