@@ -27,23 +27,34 @@ function handleFileSelect(evt) {
 
     var reader = new FileReader();
     reader.onload = function () {
-        var text = reader.result;
-        if (file.type === "text/csv" || file.type === "application/vnd.ms-excel") {
-            readFileCSV(text, file.name);
-        }
-        else if (file.type === "text/plain") {
-            readFileTXT(text, file.name);
-        }
+        var file_content = reader.result;
+        detectFileTypeAndParse(file_content, file.name);
     };
     reader.readAsText(file);
 }
 
 /* Reads in CSV file from Blackboard and parses through to write to text file.
  * Handles changes to the default grade center scheme. */
-function readFileCSV(text, fileName) {
+function detectFileTypeAndParse(text, fileName) {
     var parse = Papa.parse(text, {header: true, skipEmptyLines: 'greedy'});
-    var students = parse['data'];
 
+    if (parse['data'][parse['data'].length - 1].hasOwnProperty("Student")) {
+        return parseStudentsFile(parse['data'], fileName);
+    }
+    else if (isValidUser(parse['data'][0]['student_number'])) {
+        return parseParScoreFile(parse['data'], fileName);
+    }
+
+    swal({
+        title: "Incorrectly Formatted File",
+        text: "Please only drag and drop files given to you from Canvas or ParScore. We did not detect the proper formatting necessary to convert your file.",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    });
+}
+
+function parseStudentsFile(students, fileName) {
     //if any of the column positions did not get set, we assume the file is not formatted correctly
     if (!students[students.length - 1].hasOwnProperty("Student") || !students[students.length - 1].hasOwnProperty("SIS Login ID")) {
         swal({
@@ -68,21 +79,7 @@ function readFileCSV(text, fileName) {
 
 
 /* Reads in Text file from ParScore and populates an array with the content of the text for CSV format.*/
-function readFileTXT(text, fileName) {
-    var parse = Papa.parse(text, {header: true, skipEmptyLines: 'greedy'});
-    var records = parse['data'];
-
-    if (!(isValidUser(records[0]['student_number']))) {
-        swal({
-            title: "Incorrectly Formatted File",
-            text: "Please only drag and drop TXT files given to you from ParScore. We did not detect the proper formatting necessary to convert your file.",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true
-        });
-        return;
-    }
-
+function parseParScoreFile(records, fileName) {
     var header = ["Student", "ID", "SIS User ID", "SIS Login ID", "Section"];
     for(var key in records[1]) {
       if(records[1].hasOwnProperty(key) && key !== 'student_number') {
