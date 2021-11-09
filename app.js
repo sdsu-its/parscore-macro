@@ -116,7 +116,7 @@ function makeTextFile(text, fileName) {
     var textFile = window.URL.createObjectURL(data);
     var link = document.createElement("a");
     link.setAttribute("href", textFile);
-    link.setAttribute("download", fileName + ".txt");
+    link.setAttribute("download", fileName + "-converted-from-canvas.txt");
     document.body.appendChild(link);
     link.click();
 }
@@ -126,7 +126,7 @@ function makeCSVFile(encodedUri, fileName) {
     fileName = removeExtension(fileName);
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", fileName + ".csv");
+    link.setAttribute("download", fileName + "-converted-from-parscore.csv");
     document.body.appendChild(link);
     link.click();
 }
