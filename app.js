@@ -105,7 +105,7 @@ function isValidUser(userName) {
     userName = userName.replace(/['"]+/g, '');  //get rid of string quotes
     isValid = true;
     num = parseInt(userName);
-    if (isNaN(num) || num < 800000000) return false;  //if the number is not a number or it is less than the lowest redID it's not valid
+    if (isNaN(num)) return false;  //if the number is not a number or it is less than the lowest redID it's not valid
     return true;
 }
 
